@@ -1,0 +1,1 @@
+{"name":"gettasklist","version":"1.0.0","description":"获取小组任务列表","main":"index.js","dependencies":{"wx-server-sdk":"latest"}}

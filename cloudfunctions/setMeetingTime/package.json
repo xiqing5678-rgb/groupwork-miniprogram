@@ -1,0 +1,1 @@
+{"name":"setmeetingtime","version":"1.0.0","description":"组长设置/清除小组会议时间","main":"index.js","dependencies":{"wx-server-sdk":"latest"}}

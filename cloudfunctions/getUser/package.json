@@ -1,0 +1,9 @@
+{
+  "name": "getuser",
+  "version": "1.0.0",
+  "description": "获取/初始化当前用户",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

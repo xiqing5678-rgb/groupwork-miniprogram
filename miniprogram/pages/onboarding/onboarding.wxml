@@ -1,0 +1,69 @@
+<!--pages/onboarding/onboarding.wxml-->
+<view class="onboarding">
+  <view class="onboarding-top">
+    <text class="skip-btn" bindtap="onSkip">跳过</text>
+  </view>
+
+  <view class="onboarding-body">
+    <!-- 插图展位 -->
+    <view class="illustration">
+      <view class="illus-card">
+        <view class="illus-line"></view>
+        <view class="illus-line short"></view>
+        <view class="illus-line"></view>
+        <view class="illus-check">✓</view>
+      </view>
+      <view class="illus-dot d1"></view>
+      <view class="illus-dot d2"></view>
+    </view>
+
+    <!-- 标题区 -->
+    <view class="title-block">
+      <text class="page-title">欢迎使用小组协作系统</text>
+      <text class="page-sub">完善你的资料，开始高效协作吧</text>
+    </view>
+
+    <!-- 头像上传 -->
+    <view class="avatar-area">
+      <button
+        class="avatar-btn {{avatarChosen ? 'chosen' : ''}}"
+        open-type="chooseAvatar"
+        bind:chooseavatar="onChooseAvatar"
+        hover-class="avatar-hover"
+      >
+        <image class="avatar" src="{{avatarUrl}}" mode="aspectFill"></image>
+        <view class="avatar-badge">
+          <view class="camera-body">
+            <view class="camera-lens"></view>
+          </view>
+        </view>
+      </button>
+    </view>
+
+    <!-- 昵称输入 -->
+    <view class="field">
+      <text class="field-label">昵称</text>
+      <view class="input-wrap">
+        <input
+          class="nickname-input"
+          name="nickname"
+          type="nickname"
+          value="{{nickname}}"
+          placeholder="你的昵称"
+          placeholder-class="input-placeholder"
+          bindinput="onNicknameInput"
+        />
+        <view class="input-clear" wx:if="{{nickname}}" bindtap="onClearNickname">
+          <text class="clear-x">✕</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 主按钮 -->
+    <button class="submit-btn" bindtap="onSave" hover-class="submit-btn-hover" disabled="{{saving}}">
+      {{saving ? '保存中...' : '保存并进入'}}
+    </button>
+
+    <text class="privacy-note">🔒 我们将保护你的个人信息安全</text>
+  </view>
+</view>

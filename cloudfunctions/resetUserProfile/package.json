@@ -1,0 +1,9 @@
+{
+  "name": "resetuserprofile",
+  "version": "1.0.0",
+  "description": "退出登录：重置当前用户资料",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

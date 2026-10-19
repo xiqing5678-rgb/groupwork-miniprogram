@@ -1,0 +1,52 @@
+<!--pages/me/me.wxml-->
+<navigation-bar title="我的" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<scroll-view class="page-scroll" scroll-y>
+  <view class="page">
+    <!-- 资料卡 -->
+    <view class="profile-card">
+      <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+        <image class="avatar" src="{{avatarUrl}}" mode="aspectFill"></image>
+      </button>
+      <view class="profile-info">
+        <text class="nickname">{{userInfo.nickname || '未设置昵称'}}</text>
+        <text class="subtitle">点头像换头像 · 点「编辑」保存修改</text>
+      </view>
+      <view class="edit-btn" bindtap="onToggleEdit">{{editing ? '收起' : '编辑'}}</view>
+    </view>
+
+    <!-- 编辑资料表单 -->
+    <view wx:if="{{editing}}" class="card edit-card">
+      <view class="inner-title">修改昵称</view>
+      <form bindsubmit="onSaveProfile">
+        <view class="field">
+          <text class="label">昵称</text>
+          <input class="input" name="nickname" type="nickname" placeholder="请输入昵称" />
+        </view>
+        <view class="btn-row">
+          <button class="mini-btn" bindtap="onCancelEdit">取消</button>
+          <button class="mini-btn primary" form-type="submit" disabled="{{saving}}">{{saving ? '保存中...' : '保存'}}</button>
+        </view>
+      </form>
+    </view>
+
+    <!-- 设置栏目 -->
+    <view class="card list-card">
+      <view class="cell" bindtap="onOpenHelp">
+        <text class="cell-label">帮助与说明</text>
+        <text class="cell-arrow">›</text>
+      </view>
+      <view class="cell" bindtap="onClearCache">
+        <text class="cell-label">清除本地缓存</text>
+        <text class="cell-arrow">›</text>
+      </view>
+      <view class="cell" bindtap="onShowAbout">
+        <text class="cell-label">关于小程序</text>
+        <text class="cell-value">{{version}}</text>
+      </view>
+    </view>
+
+    <!-- 退出登录 -->
+    <button class="logout-btn" bindtap="onLogout">退出登录</button>
+    <text class="footer-tip">退出后需重新设置昵称与头像，不影响已加入的小组</text>
+  </view>
+</scroll-view>

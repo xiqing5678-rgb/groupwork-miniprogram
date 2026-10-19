@@ -1,0 +1,65 @@
+/**pages/create-group/create-group.wxss**/
+page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f7f8fa;
+}
+
+.page-scroll {
+  flex: 1;
+  min-height: 0;
+}
+
+.page {
+  min-height: 100%;
+  padding: 32rpx;
+  box-sizing: border-box;
+}
+
+.form {
+  margin-top: 32rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.field {
+  margin-bottom: 32rpx;
+}
+
+.label {
+  display: block;
+  font-size: 26rpx;
+  color: #6b7280;
+  margin-bottom: 16rpx;
+}
+
+.input {
+  width: 100%;
+  height: 88rpx;
+  background: #f8fafc;
+  border: 1rpx solid #e5e7eb;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+  box-sizing: border-box;
+  font-size: 28rpx;
+  color: #1f2937;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: 48rpx;
+  background: #2563eb;
+  color: #ffffff;
+  border-radius: 16rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  box-shadow: 0 8rpx 20rpx rgba(37, 99, 235, 0.24);
+}
+
+.submit-btn[disabled] {
+  opacity: 0.6;
+  color: #ffffff;
+}

@@ -1,0 +1,1 @@
+{"name":"joingroup","version":"1.0.0","description":"通过邀请码加入小组","main":"index.js","dependencies":{"wx-server-sdk":"latest"}}

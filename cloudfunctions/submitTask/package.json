@@ -1,0 +1,1 @@
+{"name":"submittask","version":"1.0.0","description":"提交任务成果（文件/链接）","main":"index.js","dependencies":{"wx-server-sdk":"latest"}}

@@ -1,0 +1,1 @@
+{"name":"assigntask","version":"1.0.0","description":"组长分配未认领任务","main":"index.js","dependencies":{"wx-server-sdk":"latest"}}

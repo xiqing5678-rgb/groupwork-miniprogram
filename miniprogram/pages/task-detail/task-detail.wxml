@@ -1,0 +1,102 @@
+<!--pages/task-detail/task-detail.wxml-->
+<navigation-bar title="任务详情" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<scroll-view class="page-scroll" scroll-y>
+  <view class="page">
+  <view wx:if="{{loading}}" class="center">
+    <text class="hint-text">加载中...</text>
+  </view>
+
+  <view wx:elif="{{loadError}}" class="center">
+    <text class="hint-text">加载失败，请检查网络后重试</text>
+    <button class="retry-btn" bindtap="onRetry">重试</button>
+  </view>
+
+  <block wx:elif="{{detail}}">
+    <view class="card">
+      <view class="task-head">
+        <text class="task-name">{{detail.name}}</text>
+        <text class="status-tag {{detail.status}}">{{statusText}}</text>
+      </view>
+      <text class="task-desc">{{detail.description || '暂无描述'}}</text>
+
+      <view class="meta-grid">
+        <view class="meta-item">
+          <text class="meta-label">贡献率</text>
+          <text class="meta-value">{{detail.contribution}}%</text>
+        </view>
+        <view class="meta-item">
+          <text class="meta-label">负责人</text>
+          <text class="meta-value">{{detail.assigneeName || '待分配'}}</text>
+        </view>
+        <view class="meta-item">
+          <text class="meta-label">分配方式</text>
+          <text class="meta-value">{{detail.assignMode === 'claim' ? '成员认领' : '组长分配'}}</text>
+        </view>
+        <view class="meta-item">
+          <text class="meta-label">截止时间</text>
+          <text class="meta-value">{{detail.deadlineText}}</text>
+        </view>
+      </view>
+
+      <view wx:if="{{detail.assignMode === 'claim'}}" class="claim-window">
+        <text class="meta-label">认领窗口</text>
+        <text class="meta-value">{{detail.claimWindowText}}</text>
+      </view>
+
+      <view wx:if="{{detail.claimEnded}}" class="notice">认领已截止，任务待组长处理</view>
+      <view wx:if="{{detail.overdueOnce}}" class="notice warn">该任务曾逾期</view>
+      <view wx:if="{{detail.status === 'completed' && detail.submittedAtText}}" class="notice">
+        实际提交时间：{{detail.submittedAtText}}
+      </view>
+    </view>
+
+    <view class="card" wx:if="{{canClaim || canAssign || canSubmit}}">
+      <button wx:if="{{canClaim}}" class="action-btn primary" bindtap="onClaim">认领此任务</button>
+      <button wx:if="{{canAssign}}" class="action-btn" bindtap="onAssign">分配任务</button>
+
+      <block wx:if="{{canSubmit}}">
+        <view class="inner-title">提交成果</view>
+        <view class="submit-type-row">
+          <view class="type-btn {{submitType === 'file' ? 'active' : ''}}" data-type="file" bindtap="onSelectSubmitType">文件</view>
+          <view class="type-btn {{submitType === 'link' ? 'active' : ''}}" data-type="link" bindtap="onSelectSubmitType">链接</view>
+        </view>
+
+        <block wx:if="{{submitType === 'file'}}">
+          <button class="file-btn" bindtap="onChooseFile">
+            {{pendingFile ? '已选择文件，点击重新选择' : '选择文件'}}
+          </button>
+        </block>
+        <block wx:else>
+          <input class="input" placeholder="粘贴成果链接" value="{{linkUrl}}" bind:input="onLinkInput" />
+        </block>
+
+        <button class="submit-btn" bindtap="onSubmit" disabled="{{submitting}}">
+          {{submitting ? '提交中...' : '提交'}}
+        </button>
+      </block>
+    </view>
+
+    <view class="card">
+      <view class="inner-title">提交记录（{{detail.submissions.length}}）</view>
+      <view wx:if="{{detail.submissions.length === 0}}" class="empty-state small">
+        <text class="empty-icon">📭</text>
+        <text class="empty-title">暂无提交记录</text>
+        <text class="empty-sub">负责人提交后会显示在这里</text>
+      </view>
+      <view wx:else>
+        <view wx:for="{{detail.submissions}}" wx:key="submittedAt" class="submission-item">
+          <view class="submission-head">
+            <text class="submission-name">{{item.submitterName}}</text>
+            <text class="on-time-tag {{item.isOnTime ? '' : 'late'}}">{{item.isOnTime ? '按时' : '逾期'}}</text>
+          </view>
+          <text class="submission-time">{{item.submittedAtText}}</text>
+          <view wx:if="{{item.type === 'link' && item.url}}" class="link-text" data-url="{{item.url}}" bindtap="onCopyLink">
+            {{item.url}}
+          </view>
+          <view wx:if="{{item.type === 'file'}}" class="file-link" data-fileid="{{item.fileID}}" bindtap="onPreviewFile">查看文件</view>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>
+</scroll-view>

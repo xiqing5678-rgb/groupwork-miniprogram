@@ -1,0 +1,64 @@
+<!--pages/group-progress/group-progress.wxml-->
+<navigation-bar title="小组进度" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<scroll-view class="page-scroll" scroll-y>
+  <view class="page">
+  <view wx:if="{{loading}}" class="center">
+    <text class="hint-text">加载中...</text>
+  </view>
+
+  <view wx:elif="{{loadError}}" class="center">
+    <text class="hint-text">加载失败，请检查网络后重试</text>
+    <button class="retry-btn" bindtap="onRetry">重试</button>
+  </view>
+
+  <block wx:elif="{{progress}}">
+    <view class="card">
+      <text class="group-name">{{progress.groupName}}</text>
+      <view wx:if="{{progress.overall.total === 0}}" class="empty-hint">
+        <text class="empty-icon">📊</text>
+        <text class="empty-title">暂无任务</text>
+        <text class="empty-sub">创建任务后这里会显示进度统计</text>
+      </view>
+      <block wx:else>
+      <view class="progress-bar-wrap">
+        <view class="progress-bar" style="width: {{progress.overall.completionRate}}%;"></view>
+      </view>
+      <text class="progress-rate">{{progress.overall.completionRate}}% 已完成</text>
+      <view class="overall-row">
+        <view class="overall-item">
+          <text class="overall-num">{{progress.overall.total}}</text>
+          <text class="overall-label">总任务</text>
+        </view>
+        <view class="overall-item">
+          <text class="overall-num">{{progress.overall.completed}}</text>
+          <text class="overall-label">已完成</text>
+        </view>
+        <view class="overall-item">
+          <text class="overall-num">{{progress.overall.overdue}}</text>
+          <text class="overall-label">已逾期</text>
+        </view>
+        <view class="overall-item">
+          <text class="overall-num">{{progress.overall.unassigned}}</text>
+          <text class="overall-label">未分配</text>
+        </view>
+      </view>
+      </block>
+      <view wx:if="{{overContribution}}" class="notice warn">部分成员贡献率合计超过 100%，请组长核对任务分配</view>
+    </view>
+
+    <view class="section-title">成员统计</view>
+    <view class="card member-list">
+      <view wx:for="{{progress.members}}" wx:key="openid" class="member-row">
+        <image class="member-avatar" src="{{item.avatarUrl || defaultAvatar}}"></image>
+        <view class="member-info">
+          <view class="member-name-row">
+            <text class="member-name">{{item.nickname}}</text>
+            <text class="role-tag {{item.role === 'leader' ? 'leader' : ''}}">{{item.role === 'leader' ? '组长' : '组员'}}</text>
+          </view>
+          <text class="member-stats">任务 {{item.assignedCount}} · 完成 {{item.completedCount}} · 逾期 {{item.overdueCount}} · 贡献率 {{item.contribution}}%</text>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>
+</scroll-view>

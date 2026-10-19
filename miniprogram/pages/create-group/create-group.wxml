@@ -1,0 +1,19 @@
+<!--pages/create-group/create-group.wxml-->
+<navigation-bar title="创建小组" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<scroll-view class="page-scroll" scroll-y>
+  <view class="page">
+  <form class="form" bindsubmit="onSubmit">
+    <view class="field">
+      <text class="label">小组名称</text>
+      <input class="input" name="groupName" placeholder="例如：数据结构课程设计" />
+    </view>
+    <view class="field">
+      <text class="label">小组描述（可选）</text>
+      <input class="input" name="description" placeholder="一句话介绍你们的小组" />
+    </view>
+    <button class="submit-btn" form-type="submit" disabled="{{submitting}}">
+      {{submitting ? '创建中...' : '创建小组'}}
+    </button>
+  </form>
+</view>
+</scroll-view>

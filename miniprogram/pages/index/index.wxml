@@ -1,0 +1,98 @@
+<!--index.wxml-->
+<navigation-bar title="小组协作系统" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<scroll-view class="page-scroll" scroll-y refresher-enabled="{{true}}" refresher-triggered="{{refresherTriggered}}" bindrefresherrefresh="onRefresherRefresh">
+  <view class="page">
+    <view wx:if="{{loading}}" class="center">
+      <text class="hint-text">加载中...</text>
+    </view>
+
+    <view wx:elif="{{loadError}}" class="center">
+      <text class="hint-text">加载失败，请检查网络后重试</text>
+      <button class="retry-btn" bindtap="onRetryInit">重试</button>
+    </view>
+
+        <block wx:elif="{{!userInfo || !userInfo.nickname}}">
+      <view class="setup-empty">
+        <text class="setup-empty-title">完善资料，开始协作</text>
+        <text class="setup-empty-sub">设置头像和昵称后，即可创建或加入小组</text>
+        <button class="setup-empty-btn" bindtap="onGoOnboarding">去设置资料</button>
+      </view>
+    </block>
+
+    <block wx:else>
+      <view class="home-head" bindtap="onGoMe">
+        <image class="home-avatar" src="{{avatarUrl}}"></image>
+        <view class="home-info">
+          <text class="home-name">{{userInfo.nickname}}</text>
+          <text class="home-sub">欢迎回来，今天也是元气满满的一天！</text>
+        </view>
+        <text class="home-arrow">›</text>
+      </view>
+
+      <view class="stats-card">
+        <view class="stat-item">
+          <text class="stat-num">{{groups.length}}</text>
+          <text class="stat-label">我的小组</text>
+        </view>
+        <view class="stats-divider"></view>
+        <view class="stat-item">
+          <text class="stat-num">{{leaderCount}}</text>
+          <text class="stat-label">我管理的</text>
+        </view>
+        <view class="stats-divider"></view>
+        <view class="stat-item">
+          <text class="stat-num">{{memberCount}}</text>
+          <text class="stat-label">我参与的</text>
+        </view>
+      </view>
+
+      <view class="home-actions">
+        <button class="action-btn primary" bindtap="onCreateGroup">＋ 创建小组</button>
+        <button class="action-btn" bindtap="onJoinGroup">加入小组</button>
+      </view>
+
+      <view class="section-row">
+        <text class="section-title">我的小组</text>
+        <text class="section-link" bindtap="onGoMe">查看全部 ›</text>
+      </view>
+
+      <view wx:if="{{groupsLoading}}" class="center">
+        <text class="hint-text">加载中...</text>
+      </view>
+
+      <view wx:elif="{{groupsError}}" class="inline-error">
+        <text class="hint-text">小组列表加载失败</text>
+        <button class="retry-btn" bindtap="onRetryGroups">重试</button>
+      </view>
+
+      <view wx:elif="{{groups.length === 0}}" class="empty-state">
+        <text class="empty-icon">🗂️</text>
+        <text class="empty-title">还没有小组</text>
+        <text class="empty-sub">去创建或加入一个小组开始协作吧</text>
+      </view>
+
+      <view wx:else class="group-list">
+        <view
+          wx:for="{{groups}}"
+          wx:key="groupId"
+          class="group-card"
+          data-id="{{item.groupId}}"
+          bindtap="onGroupTap"
+        >
+          <view class="group-card-header">
+            <text class="group-name">{{item.name}}</text>
+            <view class="group-tags">
+              <text wx:if="{{item.status === 'ended'}}" class="role-tag ended">已结束</text>
+              <text class="role-tag {{item.role === 'leader' ? 'leader' : ''}}">{{item.role === 'leader' ? '组长' : '组员'}}</text>
+            </view>
+          </view>
+          <text class="group-desc">{{item.description || '暂无描述'}}</text>
+          <view class="group-meta-row">
+            <text class="group-meta">👥 {{item.memberCount}} 名成员</text>
+            <text class="group-arrow">›</text>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+</scroll-view>

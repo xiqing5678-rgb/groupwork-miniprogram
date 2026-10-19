@@ -1,0 +1,15 @@
+<!--pages/join-group/join-group.wxml-->
+<navigation-bar title="加入小组" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<scroll-view class="page-scroll" scroll-y>
+  <view class="page">
+  <form class="form" bindsubmit="onSubmit">
+    <view class="field">
+      <text class="label">小组邀请码</text>
+      <input class="input code-input" name="inviteCode" placeholder="请输入 6 位邀请码" maxlength="6" />
+    </view>
+    <button class="submit-btn" form-type="submit" disabled="{{submitting}}">
+      {{submitting ? '加入中...' : '加入小组'}}
+    </button>
+  </form>
+</view>
+</scroll-view>

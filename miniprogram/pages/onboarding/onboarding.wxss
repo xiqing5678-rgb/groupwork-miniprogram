@@ -1,0 +1,274 @@
+/**pages/onboarding/onboarding.wxss**/
+page {
+  background: #f7f8fa;
+}
+
+.onboarding {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: calc(48rpx + env(safe-area-inset-top)) 40rpx 48rpx;
+  background: #f7f8fa;
+  display: flex;
+  flex-direction: column;
+}
+
+.onboarding-top {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.skip-btn {
+  font-size: 28rpx;
+  color: #6b7280;
+  padding: 8rpx 4rpx;
+}
+
+.onboarding-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 36rpx;
+}
+
+/* 插图展位 */
+.illustration {
+  width: 380rpx;
+  height: 300rpx;
+  background: #ebf5ff;
+  border-radius: 40rpx;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.illus-card {
+  width: 220rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 32rpx 28rpx;
+  box-shadow: 0 16rpx 40rpx rgba(37, 99, 235, 0.12);
+  position: relative;
+}
+
+.illus-line {
+  height: 14rpx;
+  border-radius: 7rpx;
+  background: #e2e8f0;
+  margin-bottom: 16rpx;
+}
+
+.illus-line.short {
+  width: 70%;
+}
+
+.illus-check {
+  position: absolute;
+  right: -20rpx;
+  top: -20rpx;
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 28rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 20rpx rgba(37, 99, 235, 0.3);
+}
+
+.illus-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: #bfdbfe;
+}
+
+.illus-dot.d1 {
+  width: 24rpx;
+  height: 24rpx;
+  top: 48rpx;
+  left: 48rpx;
+}
+
+.illus-dot.d2 {
+  width: 16rpx;
+  height: 16rpx;
+  bottom: 56rpx;
+  right: 56rpx;
+  background: #93c5fd;
+}
+
+/* 标题区 */
+.title-block {
+  margin-top: 40rpx;
+  text-align: center;
+}
+
+.page-title {
+  display: block;
+  font-size: 44rpx;
+  font-weight: 600;
+  color: #1f2937;
+  line-height: 1.3;
+}
+
+.page-sub {
+  display: block;
+  margin-top: 16rpx;
+  font-size: 28rpx;
+  color: #6b7280;
+}
+
+/* 头像上传 */
+.avatar-area {
+  margin-top: 56rpx;
+}
+
+.avatar-btn {
+  position: relative;
+  padding: 0;
+  width: 180rpx;
+  height: 180rpx;
+  background: transparent;
+  border: none;
+  line-height: 1;
+}
+
+.avatar-btn .avatar {
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 4rpx solid #e5e7eb;
+  box-shadow: 0 8rpx 24rpx rgba(31, 41, 55, 0.08);
+  display: block;
+  box-sizing: border-box;
+}
+
+.avatar-btn.chosen .avatar {
+  border-color: #2563eb;
+}
+
+.avatar-hover {
+  opacity: 0.9;
+}
+
+.avatar-badge {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 52rpx;
+  height: 52rpx;
+  border-radius: 50%;
+  background: #2563eb;
+  border: 4rpx solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6rpx 14rpx rgba(37, 99, 235, 0.35);
+}
+
+.camera-body {
+  width: 24rpx;
+  height: 17rpx;
+  border: 3rpx solid #ffffff;
+  border-radius: 6rpx;
+  position: relative;
+}
+
+.camera-lens {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 7rpx;
+  height: 7rpx;
+  border: 3rpx solid #ffffff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 昵称输入 */
+.field {
+  width: 100%;
+  margin-top: 48rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.field-label {
+  font-size: 28rpx;
+  color: #1f2937;
+  margin-bottom: 16rpx;
+}
+
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nickname-input {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  background: #f9fafb;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 20rpx;
+  padding: 0 64rpx 0 24rpx;
+  box-sizing: border-box;
+  font-size: 28rpx;
+  color: #1f2937;
+}
+
+.input-placeholder {
+  color: #9ca3af;
+}
+
+.input-clear {
+  position: absolute;
+  right: 20rpx;
+  width: 44rpx;
+  height: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clear-x {
+  font-size: 32rpx;
+  color: #9ca3af;
+  line-height: 1;
+}
+
+/* 主按钮 */
+.submit-btn {
+  width: 100%;
+  height: 96rpx;
+  line-height: 96rpx;
+  margin-top: 40rpx;
+  background: #2563eb;
+  color: #ffffff;
+  border-radius: 24rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  box-shadow: 0 2rpx 8rpx rgba(37, 99, 235, 0.15);
+}
+
+.submit-btn[disabled] {
+  opacity: 0.6;
+  color: #ffffff;
+}
+
+.submit-btn-hover {
+  opacity: 0.9;
+}
+
+.privacy-note {
+  margin-top: 32rpx;
+  font-size: 24rpx;
+  color: #9ca3af;
+  text-align: center;
+}

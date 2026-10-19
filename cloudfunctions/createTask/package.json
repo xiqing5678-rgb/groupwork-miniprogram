@@ -1,0 +1,1 @@
+{"name":"createtask","version":"1.0.0","description":"创建任务（成员认领/组长分配）","main":"index.js","dependencies":{"wx-server-sdk":"latest"}}

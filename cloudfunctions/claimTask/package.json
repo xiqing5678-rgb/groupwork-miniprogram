@@ -1,0 +1,1 @@
+{"name":"claimtask","version":"1.0.0","description":"成员认领任务","main":"index.js","dependencies":{"wx-server-sdk":"latest"}}

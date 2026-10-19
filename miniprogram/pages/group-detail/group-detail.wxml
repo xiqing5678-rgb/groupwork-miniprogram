@@ -1,0 +1,267 @@
+<!--pages/group-detail/group-detail.wxml-->
+<navigation-bar title="小组详情" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<scroll-view class="page-scroll" scroll-y refresher-enabled refresher-triggered="{{refresherTriggered}}" bindrefresherrefresh="onRefresherRefresh">
+  <view class="page">
+    <view wx:if="{{loading}}" class="center">
+      <text class="hint-text">加载中...</text>
+    </view>
+
+    <view wx:elif="{{loadError}}" class="center">
+      <text class="hint-text">加载失败，请检查网络后重试</text>
+      <button class="retry-btn" bindtap="onRetryDetail">重试</button>
+    </view>
+
+    <block wx:elif="{{detail}}">
+      <!-- 小组信息卡 -->
+      <view class="header-card">
+        <text class="group-name">{{detail.name}}</text>
+        <text class="group-desc">{{detail.description || '暂无描述'}}</text>
+        <view class="invite-row">
+          <text class="invite-label">邀请码</text>
+          <text class="invite-code">{{detail.inviteCode}}</text>
+          <text class="copy-btn" bindtap="onCopyInviteCode">复制</text>
+        </view>
+        <view wx:if="{{detail.meetingTimeText}}" class="meeting-row">
+          <text class="invite-label">会议时间</text>
+          <text class="meeting-value">{{detail.meetingTimeText}}</text>
+        </view>
+        <text class="hint-text">{{detail.memberCount}} 名成员 · {{detail.myRole === 'leader' ? '我是组长' : '我是组员'}}</text>
+        <view wx:if="{{detail.status === 'ended'}}" class="notice warn">该小组已结束，仅可查看</view>
+      </view>
+
+      <!-- 页内导航 -->
+      <view class="detail-tabs">
+        <view class="detail-tab {{activeTab === 'tasks' ? 'active' : ''}}" data-tab="tasks" bindtap="onSwitchTab">任务</view>
+        <view class="detail-tab {{activeTab === 'members' ? 'active' : ''}}" data-tab="members" bindtap="onSwitchTab">成员</view>
+        <view class="detail-tab {{activeTab === 'progress' ? 'active' : ''}}" data-tab="progress" bindtap="onSwitchTab">进度</view>
+        <view class="detail-tab {{activeTab === 'settings' ? 'active' : ''}}" data-tab="settings" bindtap="onSwitchTab">设置</view>
+      </view>
+
+      <!-- 任务 Tab -->
+      <block wx:if="{{activeTab === 'tasks'}}">
+        <view class="task-head-row">
+          <text class="task-count">共 {{tasks.length}} 个任务</text>
+          <text wx:if="{{detail.myRole === 'leader' && detail.status !== 'ended'}}" class="link-btn primary" bindtap="onCreateTask">＋ 创建任务</text>
+        </view>
+
+        <view wx:if="{{detail.myRole === 'leader' && detail.status !== 'ended' && (pendingCount > 0 || overdueCount > 0)}}" class="pending-card">
+          <text class="pending-text">待处理：待分配 {{pendingCount}} 个 · 已逾期 {{overdueCount}} 个</text>
+        </view>
+
+        <view wx:if="{{tasksLoading}}" class="center">
+          <text class="hint-text">加载中...</text>
+        </view>
+        <view wx:elif="{{tasksError}}" class="inline-error">
+          <text class="hint-text">任务列表加载失败</text>
+          <button class="retry-btn" bindtap="onRetryTasks">重试</button>
+        </view>
+        <view wx:elif="{{tasks.length === 0}}" class="empty-state">
+          <text class="empty-icon">📋</text>
+          <text class="empty-title">还没有任务</text>
+          <text class="empty-sub">{{detail.myRole === 'leader' ? '点击「创建任务」开始吧' : '等待组长创建任务'}}</text>
+        </view>
+        <block wx:else>
+          <!-- 任务池 -->
+          <view wx:if="{{poolTasks.length > 0}}" class="pool-head">
+            <text class="pool-title">任务池</text>
+            <text class="pool-sub">可认领任务，先到先得</text>
+          </view>
+          <view wx:if="{{poolTasks.length > 0}}" class="pool-list">
+            <view wx:for="{{poolTasks}}" wx:key="taskId" class="pool-card" data-id="{{item.taskId}}" bindtap="onTaskTap">
+              <view class="pool-card__head">
+                <text class="pool-card__name">{{item.name}}</text>
+                <text class="pool-card__score">贡献 {{item.contribution}}%</text>
+              </view>
+              <view class="pool-card__foot">
+                <view class="pool-card__meta">
+                  <text class="pool-meta">认领截止 {{item.claimEndText}}</text>
+                  <text class="pool-meta">任务截止 {{item.deadlineText}}</text>
+                </view>
+                <button class="claim-btn" data-taskid="{{item.taskId}}" catchtap="onClaimFromPool">认领</button>
+              </view>
+            </view>
+          </view>
+          <view wx:if="{{poolTasks.length === 0}}" class="pool-empty">
+            <text class="pool-empty-text">任务池暂无任务可认领</text>
+          </view>
+
+          <!-- 未分配 -->
+          <view wx:if="{{unassignedTasks.length > 0}}" class="group-head">
+            <view class="group-dot gray"></view>
+            <text class="group-label">未分配</text>
+            <text class="group-count">{{unassignedTasks.length}}</text>
+          </view>
+          <view wx:for="{{unassignedTasks}}" wx:key="taskId" class="task-card" data-id="{{item.taskId}}" bindtap="onTaskTap">
+            <view class="task-card-header">
+              <text class="task-name">{{item.name}}</text>
+              <text class="status-tag {{item.status}}">{{item.statusText}}</text>
+            </view>
+            <text class="task-desc">{{item.description || '暂无描述'}}</text>
+            <view class="task-meta-row">
+              <text class="task-meta">贡献率 {{item.contribution}}%</text>
+              <text class="task-meta">负责人 {{item.assigneeName || '待分配'}}</text>
+            </view>
+            <view wx:if="{{item.deadlineText}}" class="task-meta-row">
+              <text class="task-meta">截止 {{item.deadlineText}}</text>
+              <text class="task-meta hint {{item.status === 'overdue' ? 'danger' : ''}}">{{item.deadlineHint}}</text>
+            </view>
+            <view wx:if="{{item.claimNotStarted}}" class="notice">认领将于 {{item.claimStartText}} 开始</view>
+            <view wx:if="{{item.claimEnded}}" class="notice">认领已截止，待组长处理</view>
+            <view wx:if="{{item.status === 'completed' && item.overdueOnce}}" class="notice warn">曾逾期</view>
+          </view>
+
+          <!-- 进行中 -->
+          <view wx:if="{{ongoingTasks.length > 0}}" class="group-head">
+            <view class="group-dot blue"></view>
+            <text class="group-label">进行中</text>
+            <text class="group-count">{{ongoingTasks.length}}</text>
+          </view>
+          <view wx:for="{{ongoingTasks}}" wx:key="taskId" class="task-card" data-id="{{item.taskId}}" bindtap="onTaskTap">
+            <view class="task-card-header">
+              <text class="task-name">{{item.name}}</text>
+              <text class="status-tag {{item.status}}">{{item.statusText}}</text>
+            </view>
+            <text class="task-desc">{{item.description || '暂无描述'}}</text>
+            <view class="task-meta-row">
+              <text class="task-meta">贡献率 {{item.contribution}}%</text>
+              <text class="task-meta">负责人 {{item.assigneeName || '待分配'}}</text>
+            </view>
+            <view wx:if="{{item.deadlineText}}" class="task-meta-row">
+              <text class="task-meta">截止 {{item.deadlineText}}</text>
+              <text class="task-meta hint {{item.status === 'overdue' ? 'danger' : ''}}">{{item.deadlineHint}}</text>
+            </view>
+            <view wx:if="{{item.claimNotStarted}}" class="notice">认领将于 {{item.claimStartText}} 开始</view>
+            <view wx:if="{{item.claimEnded}}" class="notice">认领已截止，待组长处理</view>
+            <view wx:if="{{item.status === 'completed' && item.overdueOnce}}" class="notice warn">曾逾期</view>
+          </view>
+
+          <!-- 已逾期 -->
+          <view wx:if="{{overdueTasks.length > 0}}" class="group-head">
+            <view class="group-dot red"></view>
+            <text class="group-label">已逾期</text>
+            <text class="group-count">{{overdueTasks.length}}</text>
+          </view>
+          <view wx:for="{{overdueTasks}}" wx:key="taskId" class="task-card" data-id="{{item.taskId}}" bindtap="onTaskTap">
+            <view class="task-card-header">
+              <text class="task-name">{{item.name}}</text>
+              <text class="status-tag {{item.status}}">{{item.statusText}}</text>
+            </view>
+            <text class="task-desc">{{item.description || '暂无描述'}}</text>
+            <view class="task-meta-row">
+              <text class="task-meta">贡献率 {{item.contribution}}%</text>
+              <text class="task-meta">负责人 {{item.assigneeName || '待分配'}}</text>
+            </view>
+            <view wx:if="{{item.deadlineText}}" class="task-meta-row">
+              <text class="task-meta">截止 {{item.deadlineText}}</text>
+              <text class="task-meta hint {{item.status === 'overdue' ? 'danger' : ''}}">{{item.deadlineHint}}</text>
+            </view>
+            <view wx:if="{{item.claimNotStarted}}" class="notice">认领将于 {{item.claimStartText}} 开始</view>
+            <view wx:if="{{item.claimEnded}}" class="notice">认领已截止，待组长处理</view>
+            <view wx:if="{{item.status === 'completed' && item.overdueOnce}}" class="notice warn">曾逾期</view>
+          </view>
+
+          <!-- 已完成 -->
+          <view wx:if="{{completedTasks.length > 0}}" class="group-head">
+            <view class="group-dot green"></view>
+            <text class="group-label">已完成</text>
+            <text class="group-count">{{completedTasks.length}}</text>
+          </view>
+          <view wx:for="{{completedTasks}}" wx:key="taskId" class="task-card" data-id="{{item.taskId}}" bindtap="onTaskTap">
+            <view class="task-card-header">
+              <text class="task-name">{{item.name}}</text>
+              <text class="status-tag {{item.status}}">{{item.statusText}}</text>
+            </view>
+            <text class="task-desc">{{item.description || '暂无描述'}}</text>
+            <view class="task-meta-row">
+              <text class="task-meta">贡献率 {{item.contribution}}%</text>
+              <text class="task-meta">负责人 {{item.assigneeName || '待分配'}}</text>
+            </view>
+            <view wx:if="{{item.deadlineText}}" class="task-meta-row">
+              <text class="task-meta">截止 {{item.deadlineText}}</text>
+              <text class="task-meta hint {{item.status === 'overdue' ? 'danger' : ''}}">{{item.deadlineHint}}</text>
+            </view>
+            <view wx:if="{{item.claimNotStarted}}" class="notice">认领将于 {{item.claimStartText}} 开始</view>
+            <view wx:if="{{item.claimEnded}}" class="notice">认领已截止，待组长处理</view>
+            <view wx:if="{{item.status === 'completed' && item.overdueOnce}}" class="notice warn">曾逾期</view>
+          </view>
+        </block>
+      </block>
+
+      <!-- 成员 Tab -->
+      <block wx:elif="{{activeTab === 'members'}}">
+        <view class="section-title">成员（{{detail.memberCount}}）</view>
+        <view class="member-list">
+          <view wx:for="{{detail.members}}" wx:key="openid" class="member-item">
+            <image class="member-avatar" src="{{item.avatarUrl || defaultAvatar}}"></image>
+            <text class="member-name">{{item.nickname}}</text>
+            <text class="role-tag {{item.role === 'leader' ? 'leader' : ''}}">{{item.role === 'leader' ? '组长' : '组员'}}</text>
+          </view>
+        </view>
+      </block>
+
+      <!-- 进度 Tab -->
+      <block wx:elif="{{activeTab === 'progress'}}">
+        <view wx:if="{{progressLoading}}" class="center">
+          <text class="hint-text">加载中...</text>
+        </view>
+        <view wx:elif="{{progressSummary}}" class="card">
+          <text class="group-name">{{detail.name}}</text>
+          <view class="progress-bar-wrap">
+            <view class="progress-bar" style="width: {{progressSummary.completionRate}}%;"></view>
+          </view>
+          <text class="progress-rate">{{progressSummary.completionRate}}% 已完成</text>
+          <view class="overview-row">
+            <view class="overview-item">
+              <text class="overview-num">{{progressSummary.total}}</text>
+              <text class="overview-label">总任务</text>
+            </view>
+            <view class="overview-item">
+              <text class="overview-num">{{progressSummary.completed}}</text>
+              <text class="overview-label">已完成</text>
+            </view>
+            <view class="overview-item">
+              <text class="overview-num">{{progressSummary.overdue}}</text>
+              <text class="overview-label">已逾期</text>
+            </view>
+            <view class="overview-item">
+              <text class="overview-num">{{progressSummary.unassigned}}</text>
+              <text class="overview-label">未分配</text>
+            </view>
+          </view>
+          <view class="progress-link" bindtap="onOpenProgress">
+            <text class="link-btn primary">查看完整进度 ›</text>
+          </view>
+        </view>
+        <view wx:else class="center">
+          <text class="hint-text">暂无进度数据</text>
+        </view>
+      </block>
+
+      <!-- 设置 Tab -->
+      <block wx:else>
+        <view class="card" wx:if="{{detail.myRole === 'leader' && detail.status !== 'ended'}}">
+          <view class="inner-title">小组设置</view>
+          <view class="field">
+            <text class="label">会议时间</text>
+            <view class="picker-row">
+              <picker mode="date" value="{{meetingDate}}" bindchange="onMeetingDateChange">
+                <view class="picker-value">{{meetingDate || '选择日期'}}</view>
+              </picker>
+              <picker mode="time" value="{{meetingTimeStr}}" bindchange="onMeetingTimeChange">
+                <view class="picker-value">{{meetingTimeStr || '选择时间'}}</view>
+              </picker>
+            </view>
+            <view class="btn-row">
+              <button class="mini-btn primary" bindtap="onSetMeetingTime">设置</button>
+              <button class="mini-btn" bindtap="onClearMeetingTime">清除</button>
+            </view>
+          </view>
+          <button class="danger-btn" bindtap="onEndGroup">结束小组</button>
+        </view>
+        <view wx:else class="readonly-card">
+          <text class="readonly-text">{{detail.status === 'ended' ? '该小组已结束，仅可查看' : '仅组长可设置小组'}}</text>
+        </view>
+      </block>
+    </block>
+  </view>
+</scroll-view>

@@ -1,0 +1,41 @@
+<!--pages/help/help.wxml-->
+<navigation-bar title="帮助与说明" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<scroll-view class="page-scroll" scroll-y>
+  <view class="page">
+    <view class="card">
+      <view class="inner-title">一、创建与加入小组</view>
+      <text class="desc">1. 首页点击「创建小组」，填写小组名称后即可创建，你会成为组长。</text>
+      <text class="desc">2. 创建成功后获得 6 位邀请码，把它发给同学。</text>
+      <text class="desc">3. 同学在首页点击「加入小组」，输入邀请码即可加入。</text>
+    </view>
+
+    <view class="card">
+      <view class="inner-title">二、任务分配：两种模式</view>
+      <text class="desc">成员认领：组长设置认领时间窗口，组员在窗口内自主认领任务。</text>
+      <text class="desc">组长分配：组长直接指定负责人，任务创建后立即进入执行。</text>
+    </view>
+
+    <view class="card">
+      <view class="inner-title">三、任务状态说明</view>
+      <text class="desc">未分配：还没有人负责，认领窗口结束后系统会提示组长处理。</text>
+      <text class="desc">已分配：已有明确负责人，正在执行中。</text>
+      <text class="desc">已完成：已提交成果。</text>
+      <text class="desc">已逾期：超过截止时间仍未完成；逾期后仍可补交，系统会保留「曾逾期」记录。</text>
+    </view>
+
+    <view class="card">
+      <view class="inner-title">四、贡献率</view>
+      <text class="desc">组长创建任务时设置贡献率（1-100），用于事前约定工作量，可在进度页查看每位成员的任务与贡献率合计。</text>
+    </view>
+
+    <view class="card">
+      <view class="inner-title">五、提交与记录</view>
+      <text class="desc">任务负责人可以提交文件或链接，系统自动记录提交人、提交时间与是否按时，提交记录对组内成员公开。</text>
+    </view>
+
+    <view class="card">
+      <view class="inner-title">六、结束小组</view>
+      <text class="desc">组长可以在小组详情页设置会议时间、结束小组。小组结束后仅可查看，不可再修改。</text>
+    </view>
+  </view>
+</scroll-view>
