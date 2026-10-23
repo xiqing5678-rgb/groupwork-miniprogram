@@ -4,8 +4,19 @@
 
 微信小程序（原生 TypeScript）＋ 微信云开发。前端不直接读写数据库，所有数据都经过云函数，权限可控、逻辑集中。
 
-<!-- 建议放 1 张 30 秒演示 GIF，README 第一屏决定别人要不要往下看 -->
-<!-- ![demo](docs/assets/demo.gif) -->
+---
+
+## 界面
+
+| 首页 · 我的小组 | 创建小组 · 邀请码 |
+|---|---|
+| <img src="docs/assets/screenshots/01-home.png" height="440"> | <img src="docs/assets/screenshots/02-create-group.png" height="440"> |
+
+| 任务池 · 认领与状态 | 进度看板 · 完成率与贡献率 |
+|---|---|
+| <img src="docs/assets/screenshots/03-task-pool.png" height="440"> | <img src="docs/assets/screenshots/04-progress.png" height="440"> |
+
+> 演示小组「计算机组成原理」：2 名成员、4 个任务，同屏可看到「已完成 / 进行中 / 已逾期」三种状态，完成率 25%。
 
 ---
 
